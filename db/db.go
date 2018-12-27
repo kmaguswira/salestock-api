@@ -22,6 +22,8 @@ var tables []interface{} = []interface{}{
 	models.Product{},
 	models.Order{},
 	models.OrderProgress{},
+	models.Sales{},
+	models.ProductOut{},
 }
 
 func Init() {

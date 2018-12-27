@@ -1,6 +1,6 @@
 name: "migrate"
 server:
-  port: ":7001"
+  port: ":7011"
 secret: "thisissecret"
 db:
   core:
