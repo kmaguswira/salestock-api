@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/kmaguswira/salestock-api/controllers"
 	"github.com/kmaguswira/salestock-api/middlewares"
 )
 
@@ -27,6 +28,17 @@ func SetupRouter(env string) *gin.Engine {
 }
 
 func RouterV1(router *gin.Engine) {
-	
+	v1 := router.Group("v1")
+	{
+		productGroup := v1.Group("product")
+		{
+			product := new(controllers.ProductController)
+			productGroup.POST("/create", product.Create)
+			productGroup.GET("/all", product.Find)
+			productGroup.GET("/get/:id", product.FindOne)
+			productGroup.PUT("/update/:id", product.Update)
+			productGroup.DELETE("/delete/:id", product.Delete)
+		}
+	}
 
 }
