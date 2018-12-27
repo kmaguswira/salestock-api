@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"reflect"
 	"strconv"
 	"strings"
@@ -20,11 +21,12 @@ var db *gorm.DB
 var err error
 var tables []interface{} = []interface{}{
 	models.Product{},
+	models.Order{},
 }
 
 func Init() {
 	config := config.GetConfig()
-	shadow, err := gorm.Open("sqlite3", config.GetString("db.core.path"))	
+	shadow, err := gorm.Open("sqlite3", config.GetString("db.core.path"))
 
 	if err != nil {
 		log.Println("Failed to connect to database")

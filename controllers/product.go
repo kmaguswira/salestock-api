@@ -17,7 +17,10 @@ func (p ProductController) FindOne(c *gin.Context) {
 	db := db.GetDB()
 	id := c.Param("id")
 
-	db.Where("id = ?", id).First(&product)
+	if err := db.Where("id = ?", id).First(&product).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
 
 	c.JSON(http.StatusOK, &product)
 }

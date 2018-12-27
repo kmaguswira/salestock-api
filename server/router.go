@@ -39,6 +39,16 @@ func RouterV1(router *gin.Engine) {
 			productGroup.PUT("/update/:id", product.Update)
 			productGroup.DELETE("/delete/:id", product.Delete)
 		}
+
+		orderGroup := v1.Group("order")
+		{
+			order := new(controllers.OrderController)
+			orderGroup.POST("/create", order.Create)
+			orderGroup.GET("/all", order.Find)
+			orderGroup.GET("/get/:id", order.FindOne)
+			orderGroup.PUT("/update/:id", order.Update)
+			orderGroup.DELETE("/delete/:id", order.Delete)
+		}
 	}
 
 }
