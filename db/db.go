@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"reflect"
 	"strconv"
 	"strings"
@@ -22,6 +21,7 @@ var err error
 var tables []interface{} = []interface{}{
 	models.Product{},
 	models.Order{},
+	models.OrderProgress{},
 }
 
 func Init() {
