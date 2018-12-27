@@ -1,0 +1,7 @@
+name: "migrate"
+server:
+  port: ":7001"
+secret: "thisissecret"
+db:
+  core:
+    path: "./salestock.db"
