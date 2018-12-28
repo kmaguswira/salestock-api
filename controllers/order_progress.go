@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -63,7 +64,7 @@ func (o OrderProgressController) Create(c *gin.Context) {
 func (o OrderProgressController) Update(c *gin.Context) {
 	id := c.Param("id")
 	var orderProgress models.OrderProgress
-	var form forms.UpdateOrder
+	var form forms.UpdateOrderProgress
 
 	if err := c.BindJSON(&form); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -80,6 +81,9 @@ func (o OrderProgressController) Update(c *gin.Context) {
 	}
 
 	utils.CopyValue(form, &orderProgress)
+
+	fmt.Println("FORM", form)
+	fmt.Println("OP", orderProgress)
 
 	db.Save(&orderProgress)
 

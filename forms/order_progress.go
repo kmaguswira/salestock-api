@@ -6,6 +6,5 @@ type CreateOrderProgress struct {
 }
 
 type UpdateOrderProgress struct {
-	OrderID          uint `json:"orderId"`
-	QuantityReceived int  `json:"quantityReceived"`
+	QuantityReceived int `json:"quantityReceived"`
 }

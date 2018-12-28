@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -55,9 +54,6 @@ func (o OrderController) Create(c *gin.Context) {
 	}
 
 	utils.CopyValue(form, &order)
-
-	fmt.Println("Form", form)
-	fmt.Println("Order", order)
 
 	db.Create(&order)
 

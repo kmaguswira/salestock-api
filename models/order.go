@@ -12,7 +12,7 @@ type Order struct {
 	OrderQuantity int             `gorm:"type:int" json:"orderQuantity,omitempty"`
 	BasePrice     int             `gorm:"type:int" json:"basePrice,omitempty"`
 	TotalPrice    int             `gorm:"type:int" json:"totalPrice,omitempty"`
-	Status        string          `gorm:"type:varchar(255)" json:"status,omitempty"`
+	Status        string          `gorm:"type:varchar(255);default:'Incomplete'" json:"status,omitempty"`
 	Invoice       string          `gorm:"type:varchar(255)" json:"invoice,omitempty"`
 	Date          time.Time       `json:"date,omitempty"`
 	OrderProgress []OrderProgress `json:"orderProgress"`
