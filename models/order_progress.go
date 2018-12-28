@@ -11,6 +11,19 @@ type OrderProgress struct {
 	QuantityReceived int   `gorm:"type:int" json:"quantityReceived,omitempty"`
 }
 
+func (o *OrderProgress) AfterCreate(db *gorm.DB) error {
+	var order Order
+	var product Product
+
+	db.Where("ID = ?", o.OrderID).First(&order)
+	db.Where("ID = ?", order.ProductID).First(&product)
+
+	product.Quantity += o.QuantityReceived
+	db.Save(&product)
+
+	return nil
+}
+
 func (o *OrderProgress) AfterSave(db *gorm.DB) error {
 	var orderProgress []OrderProgress
 	var order Order

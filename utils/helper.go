@@ -26,6 +26,9 @@ func CopyValue(a, b interface{}) {
 		} else if bf.IsValid() && av.Field(i).Type().Name() == "int" && bf.Type().Name() == "int" && bf.Interface().(int) != av.Field(i).Interface().(int) {
 			bf.Set(av.Field(i))
 
+		} else if bf.IsValid() && av.Field(i).Type().Name() == "uint" && bf.Type().Name() == "uint" && bf.Interface().(uint) != av.Field(i).Interface().(uint) {
+			bf.Set(av.Field(i))
+
 		}
 	}
 
