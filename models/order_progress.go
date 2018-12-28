@@ -8,7 +8,7 @@ import (
 type OrderProgress struct {
 	gorm.Model
 	Order            Order     `json:"order,omitempty"`
-	OrderID          int       `json:"orderId,omitempty"`
+	OrderID          uint      `json:"orderId,omitempty"`
 	QuantityReceived int       `gorm:"type:int" json:"quantityReceived,omitempty"`
 	Date             time.Time `json:"date,omitempty"`
 }

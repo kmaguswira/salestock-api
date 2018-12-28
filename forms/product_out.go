@@ -1,8 +1,8 @@
 package forms
 
 type CreateProductOut struct {
-	ProductID  int    `json:"productId" binding:"required"`
-	SalesID    int    `json:"salesId" binding:"required"`
+	ProductID  uint   `json:"productId" binding:"required"`
+	SalesID    uint   `json:"salesId" binding:"required"`
 	Quantity   int    `json:"quantity" binding:"required"`
 	SellPrice  int    `json:"sellPrice" binding:"required"`
 	TotalPrice int    `json:"totalPrice" binding:"required"`
@@ -11,8 +11,8 @@ type CreateProductOut struct {
 }
 
 type UpdateProductOut struct {
-	ProductID  int    `json:"productId"`
-	SalesID    int    `json:"salesId"`
+	ProductID  uint   `json:"productId"`
+	SalesID    uint   `json:"salesId"`
 	Quantity   int    `json:"quantity"`
 	SellPrice  int    `json:"sellPrice"`
 	TotalPrice int    `json:"totalPrice"`

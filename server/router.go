@@ -78,6 +78,12 @@ func RouterV1(router *gin.Engine) {
 			productOutGroup.PUT("/update/:id", productOut.Update)
 			productOutGroup.DELETE("/delete/:id", productOut.Delete)
 		}
+
+		csvGroup := v1.Group("csv")
+		{
+			csv := new(controllers.CSVController)
+			csvGroup.POST("/import", csv.ImportFrom)
+		}
 	}
 
 }
