@@ -67,6 +67,7 @@ func RouterV1(router *gin.Engine) {
 			salesGroup.GET("/all", sales.Find)
 			salesGroup.GET("/get/:id", sales.FindOne)
 			salesGroup.DELETE("/delete/:id", sales.Delete)
+			salesGroup.POST("/new-sales", sales.NewSales)
 		}
 
 		productOutGroup := v1.Group("product-out")

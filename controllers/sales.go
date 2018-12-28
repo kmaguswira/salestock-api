@@ -5,7 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kmaguswira/salestock-api/db"
+	"github.com/kmaguswira/salestock-api/forms"
 	"github.com/kmaguswira/salestock-api/models"
+	"github.com/kmaguswira/salestock-api/utils"
 )
 
 type SalesController struct{}
@@ -63,5 +65,40 @@ func (s SalesController) Delete(c *gin.Context) {
 	db.Model(sales).Related(&sales.ProductOuts)
 
 	c.JSON(http.StatusOK, &sales)
+
+}
+
+func (s SalesController) NewSales(c *gin.Context) {
+	var form forms.CreateSales
+	var sales models.Sales
+	var db = db.GetDB()
+
+	if err := c.BindJSON(&form); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	sales.Note = form.Note
+	db.Create(&sales)
+
+	var res []interface{}
+	for _, product := range form.Products{
+		product.SalesID = sales.ID
+		product.Type = "Sales"
+		product.Note = form.Note
+		product.TotalPrice = product.Quantity * product.SellPrice
+
+		db.Create(&product)
+		utils.AfterCreateProductOut(product.ProductID, product.Quantity)
+
+		db.Model(&product).Related(&product.Product)
+		res = append(res, product)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"sales": sales,
+		"products": res,
+	})
 
 }
