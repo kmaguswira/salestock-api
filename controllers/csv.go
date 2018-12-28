@@ -155,6 +155,8 @@ func (cs CSVController) ImportFrom(c *gin.Context) {
 				typeSales = "Broken"
 			} else if line[6] == "Sample Barang" {
 				typeSales = "Sample"
+			} else {
+				typeSales = "Sales"
 			}
 
 			productOut := models.ProductOut{
@@ -177,4 +179,22 @@ func (cs CSVController) ImportFrom(c *gin.Context) {
 
 	c.String(http.StatusOK, fmt.Sprintf("File %s uploaded successfully with fields name=%s and email=%s.", file.Filename, typeCSV, typeCSV))
 	// c.JSON(http.StatusOK, &order)
+}
+
+func (cs CSVController) ExportTo(c *gin.Context) {
+	var typeReport string
+	var isExist bool
+	if typeReport, isExist = c.GetQuery("type"); !isExist {
+		c.String(http.StatusBadRequest, fmt.Sprintf("invalid query"))
+		return
+	}
+
+	if typeReport == "sales" || typeReport == "product" {
+		c.Writer.Header().Set("Content-type", "text/csv")
+		c.Writer.Header().Set("Content-Disposition", "attachment; filename="+typeReport+".csv")
+		c.File(filepath.Join("public", typeReport+".csv"))
+	} else {
+		c.AbortWithStatus(404)
+	}
+
 }
