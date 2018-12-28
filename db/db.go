@@ -2,9 +2,7 @@ package db
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
-	"reflect"
 	"strconv"
 	"strings"
 
@@ -13,18 +11,11 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/kmaguswira/salestock-api/config"
-	"github.com/kmaguswira/salestock-api/models"
 )
 
 var db *gorm.DB
 var err error
-var tables []interface{} = []interface{}{
-	models.Product{},
-	models.Order{},
-	models.OrderProgress{},
-	models.Sales{},
-	models.ProductOut{},
-}
+
 
 func Init() {
 	config := config.GetConfig()
@@ -48,26 +39,9 @@ func CloseDB() {
 	db.Close()
 }
 
-func Migrate() {
-	for _, model := range tables {
-
-		if !db.HasTable(model) {
-			db.CreateTable(model)
-		} else {
-			log.Println("Table", reflect.TypeOf(model).Name(), "already exists")
-		}
-
-		if err := db.AutoMigrate(model).Error; err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println("Auto migrating", reflect.TypeOf(model).Name(), "...")
-		}
-	}
-}
-
 func QueryBuilder(c *gin.Context) *gorm.DB {
 	orderQuery := "created_at desc"
-	var limitQuery int64 = 100
+	var limitQuery int64 = 1000
 	var offsetQuery int64 = 0
 	var whereQuery interface{}
 	var whereKey []string

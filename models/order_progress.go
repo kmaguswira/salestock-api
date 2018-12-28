@@ -2,13 +2,34 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"time"
 )
 
 type OrderProgress struct {
 	gorm.Model
-	Order            Order     `json:"order,omitempty"`
-	OrderID          uint      `json:"orderId,omitempty"`
-	QuantityReceived int       `gorm:"type:int" json:"quantityReceived,omitempty"`
-	Date             time.Time `json:"date,omitempty"`
+	Order            Order `json:"order,omitempty"`
+	OrderID          uint  `json:"orderId,omitempty"`
+	QuantityReceived int   `gorm:"type:int" json:"quantityReceived,omitempty"`
+}
+
+func (o *OrderProgress) AfterSave(db *gorm.DB) error {
+	var orderProgress []OrderProgress
+	var order Order
+	total := 0
+
+	db.Where("ID = ?", o.OrderID).First(&order)
+	db.Where("order_id = ?", o.OrderID).Find(&orderProgress)
+
+	for _, op := range orderProgress {
+		total += op.QuantityReceived
+	}
+
+	if total >= order.OrderQuantity {
+		order.Status = "Complete"
+	} else {
+		order.Status = "Incomplete"
+	}
+
+	db.Save(&order)
+
+	return nil
 }

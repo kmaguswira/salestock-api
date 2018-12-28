@@ -68,8 +68,8 @@ func (cs CSVController) ImportFrom(c *gin.Context) {
 			db.Where(models.Product{Sku: line[1]}).Attrs(models.Product{Name: line[2], Quantity: 0}).FirstOrCreate(&product)
 
 			orderQuantity, _ := strconv.Atoi(line[3])
-			basePrice, _ := strconv.Atoi(strings.Replace(strings.Replace(line[4], "Rp", "", -1), ",", "", -1))
-			totalPrice, _ := strconv.Atoi(strings.Replace(strings.Replace(line[5], "Rp", "", -1), ",", "", -1))
+			basePrice, _ := strconv.Atoi(strings.Replace(strings.Replace(line[5], "Rp", "", -1), ",", "", -1))
+			totalPrice, _ := strconv.Atoi(strings.Replace(strings.Replace(line[6], "Rp", "", -1), ",", "", -1))
 			var invoice string
 
 			if line[7] != "(Hilang)" {
@@ -99,8 +99,19 @@ func (cs CSVController) ImportFrom(c *gin.Context) {
 			progress := strings.Split(line[8], "; ")
 
 			for _, p := range progress {
-				if p != "Masih Menunggu" {
+				if strings.ToLower(p) != "masih menunggu" && p != "" {
+					data := strings.Split(p, " terima ")
+					t, _ = time.Parse("2006/01/02", data[0])
+					quantityReceived, _ := strconv.Atoi(data[1])
 
+					orderProgress := models.OrderProgress{
+						OrderID:          order.ID,
+						QuantityReceived: quantityReceived,
+					}
+
+					db.Create(&orderProgress)
+					orderProgress.CreatedAt = t
+					db.Save(&orderProgress)
 				}
 			}
 

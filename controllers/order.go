@@ -23,6 +23,7 @@ func (o OrderController) FindOne(c *gin.Context) {
 	}
 
 	db.Model(order).Related(&order.Product)
+	db.Model(order).Related(&order.OrderProgress)
 
 	c.JSON(http.StatusOK, &order)
 }
@@ -34,6 +35,7 @@ func (o OrderController) Find(c *gin.Context) {
 
 	for i := range orders {
 		db.Model(orders[i]).Related(&orders[i].Product)
+		db.Model(orders[i]).Related(&orders[i].OrderProgress)
 	}
 
 	c.JSON(http.StatusOK, &orders)

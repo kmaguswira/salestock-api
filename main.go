@@ -7,6 +7,7 @@ import (
 
 	"github.com/kmaguswira/salestock-api/config"
 	"github.com/kmaguswira/salestock-api/db"
+	"github.com/kmaguswira/salestock-api/db/migrate"
 	"github.com/kmaguswira/salestock-api/server"
 )
 
@@ -27,7 +28,7 @@ func main() {
 
 func bootstrap(env string) {
 	if env == "migrate" {
-		db.Migrate()
+		migrate.Migrate()
 		os.Exit(1)
 	} else {
 		server.Init()
