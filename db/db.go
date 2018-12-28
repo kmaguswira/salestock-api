@@ -67,7 +67,7 @@ func Migrate() {
 
 func QueryBuilder(c *gin.Context) *gorm.DB {
 	orderQuery := "created_at desc"
-	var limitQuery int64 = 1000
+	var limitQuery int64 = 300
 	var offsetQuery int64 = 0
 	var whereQuery interface{}
 	var whereKey []string
