@@ -16,14 +16,3 @@ type ProductOut struct {
 	Type       string  `gorm:"type:int" json:"type,omitempty"`
 	Note       string  `gorm:"type:varchar(255)" json:"note,omitempty"`
 }
-
-func (p *ProductOut) AfterCreate(db *gorm.DB) error {
-	var product Product
-
-	db.Where("ID = ?", p.ProductID).First(&product)
-
-	product.Quantity -= p.Quantity
-	db.Save(&product)
-
-	return nil
-}

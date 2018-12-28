@@ -56,6 +56,7 @@ func (p ProductOutController) Create(c *gin.Context) {
 	utils.CopyValue(form, &productOut)
 
 	db.Create(&productOut)
+	utils.AfterCreateProductOut(productOut.ProductID, productOut.Quantity)
 
 	db.Model(productOut).Related(&productOut.Product)
 	db.Model(productOut).Related(&productOut.Sales)

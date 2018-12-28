@@ -1,8 +1,11 @@
 package utils
 
 import (
+	"github.com/kmaguswira/salestock-api/db"
+	"github.com/kmaguswira/salestock-api/models"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 func CopyValue(a, b interface{}) {
@@ -35,13 +38,50 @@ func CopyValue(a, b interface{}) {
 }
 
 func EqualHead(a, b []string) bool {
-    if len(a) != len(b) {
-        return false
-    }
-    for i, v := range a {
-        if v != b[i] {
-            return false
-        }
-    }
-    return true
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if strings.ToLower(strings.TrimSpace(v)) != strings.ToLower(strings.TrimSpace(b[i])) {
+			return false
+		}
+	}
+	return true
+}
+
+func AfterCreateUpdateOrderProgress(orderId uint, quantity int) {
+	var order models.Order
+	var product models.Product
+	d := db.GetDB()
+
+	d.Where("ID = ?", orderId).First(&order)
+	d.Where("ID = ?", order.ProductID).First(&product)
+
+	product.Quantity += quantity
+	d.Save(&product)
+}
+
+func BeforeUpdateOrderProgress(id, orderId uint, quantity int) {
+	var order models.Order
+	var orderProgress models.OrderProgress
+	var product models.Product
+
+	d := db.GetDB()
+
+	d.Where("ID = ?", id).First(&orderProgress)
+	d.Where("ID = ?", orderId).First(&order)
+	d.Where("ID = ?", order.ProductID).First(&product)
+
+	product.Quantity -= orderProgress.QuantityReceived
+	d.Save(&product)
+}
+
+func AfterCreateProductOut(productId uint, quantity int) {
+	var product models.Product
+
+	d := db.GetDB()
+	d.Where("ID = ?", productId).First(&product)
+
+	product.Quantity -= quantity
+	d.Save(&product)
 }

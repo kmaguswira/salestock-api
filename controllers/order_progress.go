@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -55,6 +54,7 @@ func (o OrderProgressController) Create(c *gin.Context) {
 	utils.CopyValue(form, &orderProgress)
 
 	db.Create(&orderProgress)
+	utils.AfterCreateUpdateOrderProgress(orderProgress.OrderID, orderProgress.QuantityReceived)
 
 	db.Model(orderProgress).Related(&orderProgress.Order)
 
@@ -82,10 +82,9 @@ func (o OrderProgressController) Update(c *gin.Context) {
 
 	utils.CopyValue(form, &orderProgress)
 
-	fmt.Println("FORM", form)
-	fmt.Println("OP", orderProgress)
-
+	utils.BeforeUpdateOrderProgress(orderProgress.ID, orderProgress.OrderID, orderProgress.QuantityReceived)
 	db.Save(&orderProgress)
+	utils.AfterCreateUpdateOrderProgress(orderProgress.OrderID, orderProgress.QuantityReceived)
 
 	db.Model(orderProgress).Related(&orderProgress.Order)
 

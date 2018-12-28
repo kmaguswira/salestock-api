@@ -45,8 +45,8 @@ func (cs CSVController) ImportFrom(c *gin.Context) {
 	lines, _ := csv.NewReader(f).ReadAll()
 
 	productHead := []string{"SKU", "Nama Item", "Jumlah Sekarang"}
-	orderHead := []string{"Waktu ", "SKU", "Nama Barang", "Jumlah Pemesanan", "Jumlah Diterima", "Harga Beli ", "Total", "Nomer Kwitansi", "Catatan"}
-	salesHead := []string{"Waktu ", "SKU", "Nama Barang", "Jumlah Keluar", "Harga Jual", "Total", "Catatan"}
+	orderHead := []string{"Waktu", "SKU", "Nama Barang", "Jumlah Pemesanan", "Jumlah Diterima", "Harga Beli", "Total", "Nomer Kwitansi", "Catatan"}
+	salesHead := []string{"Waktu", "SKU", "Nama Barang", "Jumlah Keluar", "Harga Jual", "Total", "Catatan"}
 
 	if typeCSV == "product" && utils.EqualHead(lines[0], productHead) {
 		lines = lines[1:]
