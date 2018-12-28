@@ -46,7 +46,7 @@ func (cs CSVController) ImportFrom(c *gin.Context) {
 
 	productHead := []string{"SKU", "Nama Item", "Jumlah Sekarang"}
 	orderHead := []string{"Waktu ", "SKU", "Nama Barang", "Jumlah Pemesanan", "Jumlah Diterima", "Harga Beli ", "Total", "Nomer Kwitansi", "Catatan"}
-	// salesHead := []string{"SKU", "Nama Item", "Jumlah Sekarang"}
+	salesHead := []string{"Waktu ", "SKU", "Nama Barang", "Jumlah Keluar", "Harga Jual", "Total", "Catatan"}
 
 	if typeCSV == "product" && utils.EqualHead(lines[0], productHead) {
 		lines = lines[1:]
@@ -114,6 +114,60 @@ func (cs CSVController) ImportFrom(c *gin.Context) {
 					db.Save(&orderProgress)
 				}
 			}
+
+		}
+	} else if typeCSV == "sales" && utils.EqualHead(lines[0], salesHead) {
+		lines = lines[1:]
+		for _, line := range lines {
+			db := db.GetDB()
+			var sales models.Sales
+			var product models.Product
+
+			db.Where(models.Product{Sku: line[1]}).First(&product)
+
+			notes := strings.Split(line[6], "Pesanan ")
+			t, _ := time.Parse("2006-01-02 15:04:05", line[0])
+
+			var note string
+			if len(notes) == 2 {
+				note = notes[1]
+			} else {
+				note = notes[0]
+			}
+
+			if err := db.Where(models.Sales{Note: note}).First(&sales).Error; err != nil {
+				if line[6] != "Barang Hilang" && line[6] != "Barang Rusak" && line[6] != "Sample Barang" {
+					sales.Note = notes[1]
+					db.Create(&sales)
+					sales.CreatedAt = t
+					db.Save(&sales)
+				}
+			}
+
+			quantity, _ := strconv.Atoi(line[3])
+			sellPrice, _ := strconv.Atoi(strings.Replace(strings.Replace(line[4], "Rp", "", -1), ",", "", -1))
+			totalPrice, _ := strconv.Atoi(strings.Replace(strings.Replace(line[5], "Rp", "", -1), ",", "", -1))
+
+			var typeSales string
+			if line[6] == "Barang Hilang" {
+				typeSales = "Missing"
+			} else if line[6] == "Barang Rusak" {
+				typeSales = "Broken"
+			} else if line[6] == "Sample Barang" {
+				typeSales = "Sample"
+			}
+
+			productOut := models.ProductOut{
+				ProductID:  product.ID,
+				SalesID:    sales.ID,
+				Quantity:   quantity,
+				SellPrice:  sellPrice,
+				TotalPrice: totalPrice,
+				Type:       typeSales,
+				Note:       line[6],
+			}
+
+			db.Create(&productOut)
 
 		}
 	} else {
