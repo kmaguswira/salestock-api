@@ -30,12 +30,13 @@ func (p ProductOutController) FindOne(c *gin.Context) {
 
 func (p ProductOutController) Find(c *gin.Context) {
 	var productOuts []models.ProductOut
+	d := db.GetDB()
 	db := db.QueryBuilder(c)
 	db.Find(&productOuts)
 
 	for i := range productOuts {
-		db.Model(productOuts[i]).Related(&productOuts[i].Product)
-		db.Model(productOuts[i]).Related(&productOuts[i].Sales)
+		d.Model(productOuts[i]).Related(&productOuts[i].Product)
+		d.Model(productOuts[i]).Related(&productOuts[i].Sales)
 	}
 
 	c.JSON(http.StatusOK, &productOuts)

@@ -84,6 +84,13 @@ func RouterV1(router *gin.Engine) {
 			csv := new(controllers.CSVController)
 			csvGroup.POST("/import", csv.ImportFrom)
 		}
+
+		insightGroup := v1.Group("insight")
+		{
+			insight := new(controllers.InsightController)
+			insightGroup.GET("/value-product", insight.ValueProductInsight)
+			insightGroup.GET("/sales", insight.SalesInsight)
+		}
 	}
 
 }
