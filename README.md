@@ -37,7 +37,7 @@ go run main.go
 and it's running on port `7011`. You can change the port by editing `yaml` file in `config` directory.
 
 ## Database Schema
-![Schema](https://raw.githubusercontent.com/kmaguswira/salestock-api/master/dbschema.png)
+![DBSchema](https://raw.githubusercontent.com/kmaguswira/salestock-api/master/dbschema.png)
 
 *   `Product` the actual quantity of the product
 *   `Order` the product that will be going in to the inventory from supplier. `Order status` will be complete if the sum of `Order Progress quantityReceived` is equal `Order orderQuantity`
