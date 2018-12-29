@@ -63,7 +63,6 @@ func RouterV1(router *gin.Engine) {
 		salesGroup := v1.Group("sales")
 		{
 			sales := new(controllers.SalesController)
-			salesGroup.POST("/create", sales.Create)
 			salesGroup.GET("/all", sales.Find)
 			salesGroup.GET("/get/:id", sales.FindOne)
 			salesGroup.DELETE("/delete/:id", sales.Delete)

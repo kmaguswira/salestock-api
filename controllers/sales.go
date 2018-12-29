@@ -34,20 +34,12 @@ func (s SalesController) Find(c *gin.Context) {
 
 	for i := range saless {
 		db.Model(saless[i]).Related(&saless[i].ProductOuts)
+		for j := range saless[i].ProductOuts {
+			db.Model(saless[i].ProductOuts[j]).Related(&saless[i].ProductOuts[j].Product)
+		}
 	}
 
 	c.JSON(http.StatusOK, &saless)
-}
-
-func (s SalesController) Create(c *gin.Context) {
-	var sales models.Sales
-	var db = db.GetDB()
-
-	db.Create(&sales)
-
-	db.Model(sales).Related(&sales.ProductOuts)
-
-	c.JSON(http.StatusOK, &sales)
 }
 
 func (s SalesController) Delete(c *gin.Context) {
@@ -84,7 +76,7 @@ func (s SalesController) NewSales(c *gin.Context) {
 	db.Create(&sales)
 
 	var res []interface{}
-	for _, product := range form.Products{
+	for _, product := range form.Products {
 		product.SalesID = sales.ID
 		product.Type = "Sales"
 		product.Note = form.Note
@@ -97,7 +89,7 @@ func (s SalesController) NewSales(c *gin.Context) {
 		res = append(res, product)
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"sales": sales,
+		"sales":    sales,
 		"products": res,
 	})
 
